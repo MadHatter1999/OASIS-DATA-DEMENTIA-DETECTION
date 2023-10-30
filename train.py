@@ -3,6 +3,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 from sklearn.ensemble import RandomForestClassifier
 import joblib
+from imblearn.under_sampling import RandomUnderSampler
 
 def train_model():
     print("Loading the dataset")
@@ -22,9 +23,13 @@ def train_model():
     print("Splitting the data")
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
+    print("Applying Random Under-sampling")
+    rus = RandomUnderSampler(random_state=42)
+    X_resampled, y_resampled = rus.fit_resample(X_train, y_train)
+
     print("Scaling numerical features")
     scaler = StandardScaler()
-    X_train_scaled = scaler.fit_transform(X_train)
+    X_train_scaled = scaler.fit_transform(X_resampled)
     X_test_scaled = scaler.transform(X_test)
 
     print("Saving the scaler")
@@ -32,7 +37,7 @@ def train_model():
 
     print("Building and training the model")
     model = RandomForestClassifier(random_state=42)
-    model.fit(X_train_scaled, y_train)
+    model.fit(X_train_scaled, y_resampled)
 
     print("Saving the model")
     joblib.dump(model, 'data/model.joblib')
