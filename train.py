@@ -5,35 +5,40 @@ from sklearn.ensemble import RandomForestClassifier
 import joblib
 
 def train_model():
-    # Load the dataset
-    data = pd.read_csv('data\oasis_longitudinal_modified.csv')
-    # Encode categorical variables
+    print("Loading the dataset")
+    data = pd.read_csv('data/oasis_longitudinal_modified.csv')
+
+    print("Encoding categorical variables")
     le_gender = LabelEncoder()
     data['M/F'] = le_gender.fit_transform(data['M/F'])
 
     le_cdr_class = LabelEncoder()
     data['CDR_Class'] = le_cdr_class.fit_transform(data['CDR_Class'])
 
-    # Define features and target variable
+    print("Defining features and target variable")
     X = data.drop(columns=['Subject ID', 'MRI ID', 'Group', 'CDR', 'CDR_Class'])
     y = data['CDR_Class']
 
-    # Split the data
+    print("Splitting the data")
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-    # Scale numerical features
+
+    print("Scaling numerical features")
     scaler = StandardScaler()
     X_train_scaled = scaler.fit_transform(X_train)
     X_test_scaled = scaler.transform(X_test)
-    # Save the scaler
-    joblib.dump(scaler, 'scaler.joblib')
-    # Build and train the model
+
+    print("Saving the scaler")
+    joblib.dump(scaler, 'data/scaler.joblib')
+
+    print("Building and training the model")
     model = RandomForestClassifier(random_state=42)
     model.fit(X_train_scaled, y_train)
 
-    # Save the model
-    joblib.dump(model, 'model.joblib')
+    print("Saving the model")
+    joblib.dump(model, 'data/model.joblib')
+
+    print("Model training complete")
     return X_test_scaled, y_test
 
 if __name__ == "__main__":
-    
     train_model()
