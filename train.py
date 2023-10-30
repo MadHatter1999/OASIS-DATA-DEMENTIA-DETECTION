@@ -3,7 +3,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 from sklearn.ensemble import RandomForestClassifier
 import joblib
-from imblearn.under_sampling import RandomUnderSampler
+from imblearn.over_sampling import SMOTE
 
 def train_model():
     print("Loading the dataset")
@@ -23,9 +23,9 @@ def train_model():
     print("Splitting the data")
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-    print("Applying Random Under-sampling")
-    rus = RandomUnderSampler(random_state=42)
-    X_resampled, y_resampled = rus.fit_resample(X_train, y_train)
+    print("Applying SMOTE")
+    smote = SMOTE(random_state=42, k_neighbors=2)  # Set k_neighbors to 2 or less
+    X_resampled, y_resampled = smote.fit_resample(X_train, y_train)
 
     print("Scaling numerical features")
     scaler = StandardScaler()
