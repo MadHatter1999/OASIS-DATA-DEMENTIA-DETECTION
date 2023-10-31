@@ -16,6 +16,9 @@ def train_model():
     le_cdr_class = LabelEncoder()
     data['CDR_Class'] = le_cdr_class.fit_transform(data['CDR_Class'])
 
+    # Save the label encoder
+    joblib.dump(le_cdr_class, 'data/le_cdr_class.joblib')
+
     print("Defining features and target variable")
     X = data.drop(columns=['Subject ID', 'MRI ID', 'Group', 'CDR', 'CDR_Class'])
     y = data['CDR_Class']
@@ -46,4 +49,6 @@ def train_model():
     return X_test_scaled, y_test
 
 if __name__ == "__main__":
-    train_model()
+    X_test_scaled, y_test = train_model()
+    joblib.dump(X_test_scaled, 'data/X_test.joblib')
+    joblib.dump(y_test, 'data/y_test.joblib')
