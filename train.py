@@ -48,6 +48,8 @@ def train_model():
     print("Model training complete")
     return X_test_scaled, y_test
 
+
+
 if __name__ == "__main__":
     X_test_scaled, y_test = train_model()
     joblib.dump(X_test_scaled, 'data/X_test.joblib')
